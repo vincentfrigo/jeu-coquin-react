@@ -1,73 +1,112 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jeu Coquin Torride 🔥</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #111; color: #eee; text-align: center; padding: 20px; }
-    h1 { color: #f06; }
-    .card { background:#222; border-radius:12px; padding:20px; margin:20px auto; max-width:400px; }
-    button { background:#f06; color:#fff; border:none; border-radius:8px; padding:10px 18px; margin:5px; cursor:pointer; }
-    button:hover { background:#d0046b; }
-    textarea { width:90%; padding:8px; margin:6px 0; border-radius:8px; border:none; }
-    #addCardForm { background:#222; padding:15px; border-radius:12px; margin-top:20px; }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Jeu Coquin — Pack 100 défis</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; background:#0b0b0b; color:#f2e9e9; text-align:center; padding:20px; }
+  h1 { color:#ff5a9e; }
+  .controls { margin-bottom:10px; }
+  input[type=number] { width:80px; padding:6px; border-radius:6px; border:none; }
+  button { background:#ff5a9e; color:white; border:none; padding:8px 14px; margin:6px; border-radius:8px; cursor:pointer; }
+  .card { background:linear-gradient; border-radius:12px; padding:22px; margin:16px auto; max-width:540px; box-shadow:0 6px 18px rgba; }
+  .icon { font-size:40px; margin-bottom:6px; }
+  #addCardForm { background:#111; padding:12px; border-radius:10px; margin-top:18px; max-width:540px; margin-left:auto; margin-right:auto; }
+  textarea { width:92%; padding:8px; border-radius:8px; border:none; resize:vertical; }
+  .category { font-size:13px; opacity:0.9; margin-top:6px; }
+  footer { font-size:12px; color:#bbb; margin-top:16px; }
+</style>
 </head>
 <body>
-  <h1>Jeu Coquin Torride 🔥</h1>
-  <label for="cardNumber">Choisis une carte (1 à <span id="maxCards"></span>) :</label><br>
-  <input type="number" id="cardNumber" min="1" />
-  <button onclick="pickCard()">Voir</button>
-  <button onclick="randomCard()">Aléatoire 🎲</button>
-  <button onclick="passCard()">Passe 🚫</button>
+<h1>Jeu Coquin — Pack 100 défis 🔥</h1>
+<div class="controls">
+  <label for="cardNumber">Carte</label><br>
+  <input id="cardNumber" type="number" min="1" />
+  <button onclick="pickCard">Voir</button>
+  <button onclick="randomCard">Aléatoire 🎲</button>
+  <button onclick="passCard">Passe 🚫</button>
+</div>
 
-  <div id="card" class="card" style="display:none;">
-    <p id="cardIcon" style="font-size:2em;"></p>
-    <p id="cardText"></p>
-  </div>
+<div id="card" class="card" style="display:none;">
+  <div class="icon" id="cardIcon"></div>
+  <div id="cardText" style="font-size:18px; padding:6px 12px;"></div>
+  <div class="category" id="cardCategory"></div>
+</div>
 
-  <div id="addCardForm">
-    <h2>Ajouter ton défi 🔥</h2>
-    <textarea id="newCardText" rows="2" placeholder="Défi sexy..."></textarea><br>
-    <button onclick="addCard()">Ajouter</button>
-  </div>
+<div id="addCardForm">
+  <h2>Ajouter ton défi</h2>
+  <textarea id="newCardText" rows="3" placeholder="Écris ton défi ici..."></textarea><br>
+  <select id="newCardLevel">
+    <option value="💋">Soft 💋</option>
+    <option value="🔥">Hot 🔥</option>
+    <option value="🔒">Extrême 🔒</option>
+  </select>
+  <button onclick="addCard">Ajouter</button>
+  <p style="font-size:13px; color:#ccc; max-width:540px; margin:8px auto;">Les ajouts sont enregistrés localement sur ton navigateur.</p>
+</div>
+
+<footer>Conseil : définissez des règles claires, respect et consentement avant de jouer.</footer>
 
 <script>
-  let cards = [{'text': 'Fais un strip-tease lent de 2 minutes.', 'icon': '🔥'}, {'text': 'Embrasse passionnément la personne de ton choix.', 'icon': '💋'}, {'text': 'Laisse ton/ta partenaire t’attacher les mains pendant 5 minutes.', 'icon': '🔒'}, {'text': 'Prépare un cocktail sexy pour ton/ta partenaire.', 'icon': '🍸'}, {'text': 'Chuchote une fantasme coquin à l’oreille de ton/ta partenaire.', 'icon': '👂'}, {'text': 'Lèche le cou de la personne à ta gauche.', 'icon': '👅'}, {'text': 'Fais un massage torride de 5 minutes.', 'icon': '💆'}, {'text': 'Danse sensuellement pour la personne en face de toi.', 'icon': '💃'}, {'text': 'Fais deviner une partie de ton corps avec les yeux bandés.', 'icon': '🕶️'}, {'text': 'Mords doucement la lèvre de ton/ta partenaire.', 'icon': '🦷'}, {'text': 'Écris un mot sexy sur le corps de ton/ta partenaire avec tes doigts.', 'icon': '✍️'}, {'text': 'Donne un baiser dans le cou à la personne de ton choix.', 'icon': '😘'}, {'text': 'Chante une chanson sexy en te déshabillant d’un vêtement.', 'icon': '🎤'}, {'text': 'Fais deviner un mot avec un mime sensuel.', 'icon': '🎭'}, {'text': 'Bois cul sec et embrasse la personne en face de toi.', 'icon': '🥂'}, {'text': 'Utilise uniquement ta bouche pour exciter la main de ton/ta partenaire.', 'icon': '👄'}, {'text': 'Fais une danse collée-serrée avec la personne de ton choix.', 'icon': '🕺'}, {'text': 'Laisse ton/ta partenaire griffer doucement ton dos.', 'icon': '🐾'}, {'text': 'Masse les pieds de la personne à ta gauche.', 'icon': '🦶'}, {'text': 'Succombe à un baiser de 30 secondes minimum.', 'icon': '💏'}, {'text': 'Installe-toi sur les genoux de ton/ta partenaire pendant 2 minutes.', 'icon': '🪑'}, {'text': 'Laisse la personne à ta droite caresser ton torse/ta poitrine.', 'icon': '🤲'}, {'text': 'Lèche doucement un doigt de ton/ta partenaire.', 'icon': '👆'}, {'text': 'Donne une fessée coquine à la personne de ton choix.', 'icon': '🍑'}, {'text': 'Fais semblant de gémir comme si tu étais en plein plaisir.', 'icon': '🔊'}, {'text': 'Décris ton fantasme le plus secret.', 'icon': '💭'}, {'text': 'Montre ton meilleur regard de séducteur/séductrice.', 'icon': '👀'}, {'text': 'Passe tes mains sous les vêtements (par-dessus les sous-vêtements).', 'icon': '🖐️'}, {'text': 'Fais un câlin torride de 20 secondes.', 'icon': '🤗'}, {'text': 'Fais tourner une bouteille et embrasse celui/celle qu’elle désigne.', 'icon': '🍾'}, {'text': 'Recopie un mot sexy sur la peau de ton/ta partenaire avec ta langue.', 'icon': '👅'}, {'text': 'Laisse ton/ta partenaire retirer un vêtement de ton choix.', 'icon': '🧥'}, {'text': 'Attrape ton/ta partenaire par la taille et embrasse-le/la fougueusement.', 'icon': '🤍'}, {'text': 'Décris à voix haute une scène coquine qui t’excite.', 'icon': '🗣️'}, {'text': 'Ferme les yeux et laisse quelqu’un t’embrasser où il/elle veut.', 'icon': '🙈'}, {'text': 'Fais semblant de faire l’amour avec un oreiller devant tout le monde.', 'icon': '🛏️'}, {'text': 'Fais un massage des fesses de ton/ta partenaire.', 'icon': '🍑'}, {'text': 'Laisse ton/ta partenaire choisir une position et mime-la avec lui/elle.', 'icon': '♾️'}, {'text': 'Passe un glaçon lentement sur le corps de ton/ta partenaire.', 'icon': '🧊'}, {'text': 'Chuchote un mot cochon à l’oreille de ton/ta partenaire.', 'icon': '💬'}, {'text': 'Montre ta partie du corps préférée pendant 5 secondes.', 'icon': '✨'}, {'text': 'Fais semblant d’atteindre l’extase bruyamment.', 'icon': '😏'}, {'text': 'Décris ce que tu voudrais faire à ton/ta partenaire maintenant.', 'icon': '🔥'}, {'text': 'Laisse ton/ta partenaire te bander les yeux et te surprendre.', 'icon': '🕶️'}, {'text': 'Laisse ton/ta partenaire embrasser ton ventre.', 'icon': '👄'}, {'text': 'Mets-toi au sol et fais une pose sexy.', 'icon': '🧎'}, {'text': 'Fais une danse torride avec ton/ta partenaire.', 'icon': '💃'}, {'text': 'Décris ton/ta partenaire de la façon la plus excitante possible.', 'icon': '🤤'}, {'text': 'Donne un bisou à la personne que tu regardes en ce moment.', 'icon': '👀'}];
+let cards = [{"text": "Chuchote à ton/ta partenaire une chose qui te rend fou/folle.", "icon": "💋"}, {"text": "Donne un câlin prolongé de 60 secondes, sans parler.", "icon": "💋"}, {"text": "Fais un compliment très sensuel sur une partie de son corps.", "icon": "💋"}, {"text": "Regarde ton/ta partenaire pendant 30 secondes sans cligner des yeux.", "icon": "💋"}, {"text": "Laisse ton/ta partenaire te caresser le visage doucement.", "icon": "💋"}, {"text": "Fais un slow en te rapprochant très près.", "icon": "💋"}, {"text": "Écris un petit mot coquin et cache-le dans sa poche.", "icon": "💋"}, {"text": "Mets une musique lente et danse collé pendant 2 minutes.", "icon": "💋"}, {"text": "Donne un bisou doucement sur le front, puis sur la nuque.", "icon": "💋"}, {"text": "Utilise une plume pour effleurer son avant-bras durant 45s.", "icon": "💋"}, {"text": "Offre un massage des épaules de 3 minutes, mains lentes.", "icon": "💋"}, {"text": "Fais-lui voir une photo de vous deux et explique ce qui t'excite.", "icon": "💋"}, {"text": "Souffle doucement dans son oreille un compliment sexy.", "icon": "💋"}, {"text": "Dessine un cœur sur sa peau avec ton doigt.", "icon": "💋"}, {"text": "Ferme les yeux et laisse ton/ta partenaire poser sa main sur toi.", "icon": "💋"}, {"text": "Lis à voix basse un passage romantique ou érotique.", "icon": "💋"}, {"text": "Joue à celui/celle qui séduit le plus longtemps sans toucher.", "icon": "💋"}, {"text": "Choisis une tenue pour ton/ta partenaire et fais-lui porter.", "icon": "💋"}, {"text": "Donne-lui un baiser à l'ancienne.", "icon": "💋"}, {"text": "Fais-lui un câlin torride en le/la serrant fort pendant 20s.", "icon": "💋"}, {"text": "Prends sa main et mène-la lentement sur ton bras.", "icon": "💋"}, {"text": "Décris la première chose qui t'a attiré chez lui/elle.", "icon": "💋"}, {"text": "Fais un massage des mains, très sensuel.", "icon": "💋"}, {"text": "Propose-lui un jeu de regards pendant 2 minutes.", "icon": "💋"}, {"text": "Chante une chanson douce en le/la regardant.", "icon": "💋"}, {"text": "Fais un compliment sur sa façon de respirer quand il/elle est près.", "icon": "💋"}, {"text": "Raconte un souvenir intime que tu aimes avec lui/elle.", "icon": "💋"}, {"text": "Balade un glaçon sur ton poignet et montre-lui la sensation.", "icon": "💋"}, {"text": "Prépare un petit verre et offre-le en le regardant intensément.", "icon": "💋"}, {"text": "Improvise un poème court et coquin à son attention.", "icon": "💋"}, {"text": "Laisse ton/ta partenaire te dessiner un symbole sur la peau.", "icon": "💋"}, {"text": "Avance vers lui/elle en marchant lentement, comme une séduction.", "icon": "💋"}, {"text": "Fais un jeu : 10 secondes de silence, puis 10 secondes de baiser.", "icon": "💋"}, {"text": "Embrasse sa main comme si tu demandais sa permission.", "icon": "💋"}, {"text": "Raconte ce que tu ressens quand il/elle te touche l'épaule.", "icon": "💋"}, {"text": "Donne-lui une petite note d'amour et lis-la à voix haute.", "icon": "💋"}, {"text": "Imite son geste le plus sexy, puis laisse-le/la réagir.", "icon": "💋"}, {"text": "Fais un strip improvisé en enlevant un vêtement très lentement.", "icon": "🔥"}, {"text": "Embrasse-le/la pendant 1 minute sans t'arrêter.", "icon": "🔥"}, {"text": "Laisse ton/ta partenaire poser ses mains sur ta taille pendant 2 minutes.", "icon": "🔥"}, {"text": "Attache légèrement ses mains avec une écharpe et caresse-le/la.", "icon": "🔥"}, {"text": "Fais-lui une danse sensuelle autour de lui/elle.", "icon": "🔥"}, {"text": "Mur-mure à l'oreille ce que tu veux lui faire après le jeu.", "icon": "🔥"}, {"text": "Fais-lui un massage du torse par-dessus le vêtement.", "icon": "🔥"}, {"text": "Chuchote un fantasme et demande-lui de te répondre honnêtement.", "icon": "🔥"}, {"text": "Trace des baisers le long de sa clavicule.", "icon": "🔥"}, {"text": "Embrasse lentement le cou pendant 30 secondes.", "icon": "🔥"}, {"text": "Donne-lui une petite fessée coquine.", "icon": "🔥"}, {"text": "Fais-lui deviner un mot en lui donnant des baisers comme indices.", "icon": "🔥"}, {"text": "Place-toi derrière lui/elle et entoure sa taille en l'embrassant.", "icon": "🔥"}, {"text": "Utilise une glace ou un glaçon sur la nuque et le torse supérieur.", "icon": "🔥"}, {"text": "Raconte une scène érotique qui te met en feu, sans entrer dans le graphique.", "icon": "🔥"}, {"text": "Fais-lui un massage sensuel avec une huile ou lotion parfumée.", "icon": "🔥"}, {"text": "Fais un baiser suivi d'un léger mordillement.", "icon": "🔥"}, {"text": "Pose-toi à genoux et offre-lui un baiser intense sur la cuisse.", "icon": "🔥"}, {"text": "Demande-lui de te donner une consigne coquine pour 5 minutes.", "icon": "🔥"}, {"text": "Laisse ton/ta partenaire te guider avec une main sur ta nuque.", "icon": "🔥"}, {"text": "Ferme les yeux et laisse-le/la te caresser le front, le cou, les épaules.", "icon": "🔥"}, {"text": "Raconte une fantaisie et demande-lui de la noter sur un papier.", "icon": "🔥"}, {"text": "Fais un slow très proche, respiration contre respiration.", "icon": "🔥"}, {"text": "Propose-lui un défi : embrasser sans les mains pendant 2 minutes.", "icon": "🔥"}, {"text": "Embrasse doucement sous l'oreille en murmurant un mot coquin.", "icon": "🔥"}, {"text": "Fais un compliment très explicite sur une tenue qu'il/elle porte.", "icon": "🔥"}, {"text": "Laisse ton/ta partenaire effleurer ton ventre sous une lumière tamisée.", "icon": "🔥"}, {"text": "Prends une photo suggestive de toi et montres-la.", "icon": "🔥"}, {"text": "Improvise un mini jeu de rôle pendant 3 minutes.", "icon": "🔥"}, {"text": "Chante-lui un air sensuel tout en le/la caressant doucement.", "icon": "🔥"}, {"text": "Fais un échange : un baiser pour chaque secret partagé.", "icon": "🔥"}, {"text": "Choisis une partie du corps à couvrir d'embrassades.", "icon": "🔥"}, {"text": "Laisse ton/ta partenaire te lier les yeux et te surprendre lentement.", "icon": "🔥"}, {"text": "Fais-lui un câlin en pressant ton corps contre le sien pendant 1 min.", "icon": "🔥"}, {"text": "Donne-lui 3 baisers rapides puis un long baiser passionné.", "icon": "🔥"}, {"text": "Propose-lui un défi oral de compliments : 5 compliments en 30s.", "icon": "🔥"}, {"text": "Fais-lui sentir un parfum sur ton cou et demande-lui de deviner.", "icon": "🔥"}, {"text": "Demande-lui de chuchoter dans ton oreille quelque chose d'interdit.", "icon": "🔥"}, {"text": "Fais-lui un slow assis, jambes entremêlées.", "icon": "🔥"}, {"text": "Fais un strip-tease complet mais sans montrer de nudité explicite.", "icon": "🔒"}, {"text": "Tente un jeu de rôle plus intense pendant 10 minutes", "icon": "🔒"}, {"text": "Bande les yeux de ton/ta partenaire et explore son torse et cou pendant 5 minutes.", "icon": "🔒"}, {"text": "Donne-lui une surprise sensuelle choisie par toi.", "icon": "🔒"}, {"text": "Embrasse-le/la là où il/elle aime le plus, pendant 2 minutes sans pause.", "icon": "🔒"}, {"text": "Fais-lui un massage sensuel complet du dos en descendant jusqu'aux hanches.", "icon": "🔒"}, {"text": "Organise un moment privé : bougies, musique, et fais-lui une performance.", "icon": "🔒"}, {"text": "Écris une lettre érotique et lis-la à voix haute en te déshabillant progressivement.", "icon": "🔒"}, {"text": "Laisse ton/ta partenaire choisir une tenue pour toi et porte-la pour lui/elle.", "icon": "🔒"}, {"text": "Fais un jeu d'endurance : qui tient le regard le plus longtemps en se rapprochant.", "icon": "🔒"}, {"text": "Propose une règle pendant 1 heure : chaque fois que l'autre rit, un baiser.", "icon": "🔒"}, {"text": "Crée un parcours sensoriel et guide-le/la avec des textures et saveurs.", "icon": "🔒"}, {"text": "Fais un strip-tease tout en lui murmurant un fantasme réaliste.", "icon": "🔒"}, {"text": "Demande-lui de te donner une tâche coquine à accomplir en public discretement.", "icon": "🔒"}, {"text": "Réalise un petit scénario romantico-érotique et jouez-le ensemble.", "icon": "🔒"}, {"text": "Offre une dégustation sensuelle : fraise, chocolat, miel, à la bouche.", "icon": "🔒"}, {"text": "Improvise une scène où tu redécouvres ton/ta partenaire comme la première fois.", "icon": "🔒"}, {"text": "Inventez une histoire érotique à deux, chacun ajoutant une phrase.", "icon": "🔒"}, {"text": "Fais-lui un massage combinant huile chaude et plume.", "icon": "🔒"}, {"text": "Jouez à rester immobiles l'un contre l'autre pendant 5 minutes, seulement contact.", "icon": "🔒"}, {"text": "Improviser une séquence coquine en 60 secondes.", "icon": "💥"}, {"text": "Improviser une séquence coquine en 60 secondes.", "icon": "💥"}, {"text": "Improviser une séquence coquine en 60 secondes.", "icon": "💥"}, {"text": "Improviser une séquence coquine en 60 secondes.", "icon": "💥"}];
 
-  const saved = localStorage.getItem("cards");
-  if(saved){ try { cards = cards.concat(JSON.parse(saved)); } catch(e){} }
-  document.getElementById("maxCards").textContent = cards.length;
+document.getElementById.textContent = cards.length;
 
-  let current = null;
-  function showCard(i){
-    current = i;
-    document.getElementById("cardText").textContent = cards[i].text;
-    document.getElementById("cardIcon").textContent = cards[i].icon || "🔥";
-    document.getElementById("card").style.display="block";
-  }
-  function pickCard(){
-    let n = parseInt(document.getElementById("cardNumber").value);
-    if(isNaN(n) || n<1 || n>cards.length){ alert("Choisis entre 1 et "+cards.length); return; }
-    showCard(n-1);
-  }
-  function randomCard(){ showCard(Math.floor(Math.random()*cards.length)); }
-  function passCard(){
-    if(current==null){ alert("Aucune carte à passer"); return; }
-    document.getElementById("card").style.display="none"; current=null;
-  }
-  function addCard(){
-    const text = document.getElementById("newCardText").value.trim();
-    if(text.length<3){ alert("Écris plus de 3 caractères"); return; }
-    cards.push({text:text, icon:"🔥"});
-    save();
-    alert("Ajoutée!");
-    resetForm();
-    document.getElementById("maxCards").textContent = cards.length;
-  }
-  function resetForm(){ document.getElementById("newCardText").value=""; }
-  function save(){ localStorage.setItem("cards", JSON.stringify(cards.slice(49))); }
+const saved = localStorage.getItem;
+if{
+  try{
+    const extra = JSON.parse;
+    cards = cards.concat;
+    document.getElementById.textContent = cards.length;
+  }catch{}
+}
+
+let current = null;
+function showCard{
+  current = i;
+  const c = cards[i];
+  document.getElementById.textContent = c.text;
+  document.getElementById.textContent = c.icon || '💋';
+  let cat = 'Soft';
+  if cat = 'Hot';
+  if cat = 'Extrême';
+  if cat = 'Surprise';
+  document.getElementById.textContent = cat;
+  document.getElementById.style.display = 'block';
+  window.scrollTo.offsetTop - 30, behavior: 'smooth' });
+}
+
+function pickCard{
+  const n = parseInt.value, 10);
+  if || n < 1 || n > cards.length){ alert; return; }
+  showCard;
+}
+
+function randomCard{ showCard * cards.length)); }
+
+function passCard{
+  if{ alert; return; }
+  document.getElementById.style.display = 'none'; current = null;
+}
+
+function addCard{
+  const text = document.getElementById.value.trim;
+  const icon = document.getElementById.value;
+  if{ alert; return; }
+  cards.push;
+  save;
+  alert;
+  document.getElementById.value = '';
+  document.getElementById.textContent = cards.length;
+}
+
+function save{
+  // Save only user-added cards
+  const baseLen = 100;
+  const extra = cards.slice;
+  localStorage.setItem);
+}
 </script>
 </body>
 </html>
