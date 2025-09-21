@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jeu Coquin Torride 🔥</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body { font-family: Arial, sans-serif; background: #111; color: #eee; text-align: center; padding: 20px; }
+    h1 { color: #f06; }
+    .card { background:#222; border-radius:12px; padding:20px; margin:20px auto; max-width:400px; }
+    .card img { max-width:100%; border-radius:12px; margin-bottom:15px; }
+    button { background:#f06; color:#fff; border:none; border-radius:8px; padding:10px 18px; margin:5px; cursor:pointer; }
+    button:hover { background:#d0046b; }
+    input, textarea { width:90%; padding:8px; margin:6px 0; border-radius:8px; border:none; }
+    #addCardForm { background:#222; padding:15px; border-radius:12px; margin-top:20px; }
+  </style>
+</head>
+<body>
+  <h1>Jeu Coquin Torride 🔥</h1>
+  <label for="cardNumber">Choisis une carte (1 à <span id="maxCards"></span>) :</label><br>
+  <input type="number" id="cardNumber" min="1" />
+  <button onclick="pickCard()">Voir</button>
+  <button onclick="randomCard()">Aléatoire 🎲</button>
+  <button onclick="passCard()">Passe 🚫</button>
+
+  <div id="card" class="card" style="display:none;">
+    <img id="cardImage" src="" alt="image" />
+    <p id="cardText"></p>
+  </div>
+
+  <div id="addCardForm">
+    <h2>Ajouter ta carte 📸</h2>
+    <textarea id="newCardText" rows="2" placeholder="Défi sexy..."></textarea><br>
+    <input type="file" id="newCardImage" accept="image/*" /><br>
+    <button onclick="addCard()">Ajouter</button>
+  </div>
+
+<script>
+  const defaultImg = "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=80";
+  let cards = [];
+  for(let i=1;i<=25;i++){ cards.push({text:"Carte coquine numéro "+i, img:defaultImg}); }
+
+  const saved = localStorage.getItem("cards");
+  if(saved){ try { cards = cards.concat(JSON.parse(saved)); } catch(e){} }
+  document.getElementById("maxCards").textContent = cards.length;
+
+  let current = null;
+  function showCard(i){
+    current = i;
+    document.getElementById("cardText").textContent = cards[i].text;
+    document.getElementById("cardImage").src = cards[i].img || defaultImg;
+    document.getElementById("card").style.display="block";
+  }
+  function pickCard(){
+    let n = parseInt(document.getElementById("cardNumber").value);
+    if(isNaN(n) || n<1 || n>cards.length){ alert("Choisis entre 1 et "+cards.length); return; }
+    showCard(n-1);
+  }
+  function randomCard(){ showCard(Math.floor(Math.random()*cards.length)); }
+  function passCard(){
+    if(current==null){ alert("Aucune carte à passer"); return; }
+    document.getElementById("card").style.display="none"; current=null;
+  }
+  function addCard(){
+    const text = document.getElementById("newCardText").value.trim();
+    if(text.length<3){ alert("Écris plus de 3 caractères"); return; }
+    const file = document.getElementById("newCardImage").files[0];
+    if(file){
+      const r=new FileReader();
+      r.onload=e=>{ cards.push({text:text, img:e.target.result}); save(); alert("Ajoutée!"); resetForm(); };
+      r.readAsDataURL(file);
+    } else {
+      cards.push({text:text, img:defaultImg}); save(); alert("Ajoutée!"); resetForm();
+    }
+    document.getElementById("maxCards").textContent = cards.length;
+  }
+  function resetForm(){ document.getElementById("newCardText").value=""; document.getElementById("newCardImage").value=""; }
+  function save(){ localStorage.setItem("cards", JSON.stringify(cards.slice(25))); }
+
+  // Service worker pour PWA
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js');
+  }
+</script>
+</body>
+</html>
