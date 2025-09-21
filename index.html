@@ -22,7 +22,7 @@ input,textarea,select{width:92%;padding:10px;border-radius:10px;border:none;marg
 <div id='setup' class='section card'>
   <h2>Entrez les pseudos (un par ligne)</h2>
   <textarea id='playersInput' rows='4' placeholder='Alex\nMarie'></textarea>
-  <button id='startBtn'>🚀 Démarrer la partie</button>
+  <button id='startBtn' onclick='startGame()'>🚀 Démarrer la partie</button>
   <p style='font-size:13px;color:#ddd;'>Conseil : installez l'application (Partager → Ajouter à l'écran d'accueil) pour activer les notifications.</p>
 </div>
 <div id='game' style='display:none;'>
@@ -30,14 +30,14 @@ input,textarea,select{width:92%;padding:10px;border-radius:10px;border:none;marg
     <p><strong>Joueur actuel :</strong> <span id='currentPlayer'></span></p>
     <label for='cardNumber'>Choisir une carte (1 à <span id='maxCards'></span>)</label>
     <input id='cardNumber' type='number' min='1' placeholder='1 - ...'>
-    <button id='seeBtn'>Voir la carte choisie</button>
-    <button id='randomBtn'>Carte aléatoire 🎲</button>
-    <button id='passBtn'>Passe 🚫</button>
+    <button id='seeBtn' onclick='pickCard()'>Voir la carte choisie</button>
+    <button id='randomBtn' onclick='randomCard()'>Carte aléatoire 🎲</button>
+    <button id='passBtn' onclick='passCard()'>Passe 🚫</button>
   </div>
   <div id='card' class='card' style='display:none;text-align:center;'>
     <div id='cardIcon' class='icon'></div>
     <div id='cardText' style='font-size:18px;line-height:1.4;'></div>
-    <button id='validateBtn'>✅ Défi validé</button>
+    <button id='validateBtn' onclick='validateCard()'>✅ Défi validé</button>
   </div>
   <div class='card' style='text-align:left;'>
     <h3>Ajouter un défi</h3>
@@ -46,10 +46,10 @@ input,textarea,select{width:92%;padding:10px;border-radius:10px;border:none;marg
       <option value='🔥'>Hot 🔥</option>
       <option value='📸'>Photo 📸</option>
     </select>
-    <button id='addBtn'>➕ Ajouter</button>
+    <button id='addBtn' onclick='addCard()'>➕ Ajouter</button>
   </div>
   <p id='message'></p>
-  <div class='footer'><button id='testNotifBtn' style='font-size:12px;width:auto;padding:6px 10px;margin-top:8px;'>🔔 Tester notif</button></div>
+  <div class='footer'><button id='testNotifBtn' onclick="notify('Ceci est un test de notification 🔔')">🔔 Tester notif</button></div>
 </div>
 <div class='footer'>Rappelle-toi : consentement et respect avant chaque défi.</div>
 <script>
@@ -58,10 +58,16 @@ document.getElementById('maxCards').textContent = cards.length;
 let players = []; let currentPlayerIndex = 0; let currentCardIndex = null;
 function showMessage(msg, color='#9ff'){ const el = document.getElementById('message'); el.textContent = msg; el.style.color = color; setTimeout(()=>el.textContent='',3500);}
 if ('Notification' in window && Notification.permission !== 'granted'){ Notification.requestPermission().catch(()=>{}); }
-function notify(msg){ 
-  try { 
-    if('Notification' in window && Notification.permission === 'granted'){ 
-      new Notification('Jeu Coquin', { body: msg }); 
+function notify(msg){
+  try {
+    if('Notification' in window && Notification.permission === 'granted'){
+      new Notification('Jeu Coquin', { body: msg });
+    }
+  } catch(e){ console.warn('Notif bloquée:', e); }
+  // Always show visual confirmation
+  const el = document.getElementById('message');
+  if(el){ el.textContent = msg; el.style.color = '#0f0'; setTimeout(()=>el.textContent='',3000); }
+}); 
     } 
   } catch(e){ console.warn('Notif bloquée:', e); } 
 }); } }
@@ -73,18 +79,7 @@ function randomCard(){ showCard(Math.floor(Math.random()*cards.length)); }
 function passCard(){ document.getElementById('card').style.display='none'; currentCardIndex = null; showMessage('Défi passé.'); }
 function validateCard(){ if(currentCardIndex === null){ showMessage('Aucun défi affiché.','red'); return; } const player = players[currentPlayerIndex]; notify(player + ' a validé son défi !'); showMessage(player + ' a validé son défi.'); currentPlayerIndex = (currentPlayerIndex + 1) % players.length; updateCurrentPlayer(); document.getElementById('card').style.display='none'; currentCardIndex = null; }
 function addCard(){ const text = document.getElementById('newCardText').value.trim(); const level = document.getElementById('newCardLevel').value; if(text.length<4){ showMessage('Écris au moins 4 caractères','red'); return; } cards.push({text:text, icon: level}); document.getElementById('newCardText').value=''; document.getElementById('maxCards').textContent = cards.length; showMessage('Défi ajouté !'); }
-function bind(id, fn){ 
-  const el = document.getElementById(id); 
-  if(!el) return; 
-  el.addEventListener('click', fn); 
-}, {passive:false}); }
-bind('startBtn', startGame); bind('startBtn', startGame);
-    bind('seeBtn', pickCard);
-    bind('randomBtn', randomCard);
-    bind('passBtn', passCard);
-    bind('validateBtn', validateCard);
-    bind('addBtn', addCard);
-    bind('testNotifBtn', ()=> notify('Ceci est un test de notification 🔔'));
+bind('testNotifBtn', ()=> notify('Ceci est un test de notification 🔔'));
 </script>
 </body>
 </html>
