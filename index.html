@@ -1,36 +1,40 @@
+
 <!doctype html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Jeu Coquin — v2.3</title>
+<title>Jeu Coquin — v2.3 FIXED</title>
 <link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
 body {font-family:'Poppins',sans-serif;background:linear-gradient(180deg,#1a0006,#0b0b0b);color:#f5f5f5;margin:0;padding:0;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;}
 h1 {color:#ff6aa6;text-align:center;margin:20px;font-size:28px;}
-.card {background:rgba(20,20,20,0.9);border-radius:24px;padding:24px;margin:20px auto;max-width:600px;box-shadow:0 8px 30px rgba(255,50,100,0.3);text-align:center;animation:fadein 0.5s;}
-.icon {font-size:40px;margin-bottom:12px;}
-button {display:block;width:90%;margin:12px auto;padding:14px;border-radius:20px;border:none;background:#ff6aa6;color:white;font-size:18px;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,0.4);transition:transform 0.1s;}
-button:active {transform:scale(0.96);}
-textarea {width:90%;padding:12px;border-radius:12px;border:none;margin:10px auto;display:block;font-size:15px;}
-.footer {font-size:12px;color:#aaa;text-align:center;margin:20px;}
-@keyframes fadein {from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);}}
+.card {background:rgba(20,20,20,0.95);border-radius:24px;padding:24px;margin:20px auto;max-width:640px;box-shadow:0 8px 30px rgba(255,50,100,0.25);text-align:center;animation:fadein 0.45s;}
+.icon {font-size:44px;margin-bottom:12px;}
+button {display:block;width:88%;margin:12px auto;padding:14px;border-radius:20px;border:none;background:#ff6aa6;color:white;font-size:18px;font-weight:600;box-shadow:0 6px 18px rgba(0,0,0,0.4);transition:transform 0.08s;}
+button:active {transform:scale(0.97);}
+textarea {width:88%;padding:12px;border-radius:12px;border:none;margin:10px auto;display:block;font-size:15px;background:#111;color:#fff;}
+.footer {font-size:12px;color:#aaa;text-align:center;margin:18px;}
+small.note {display:block;color:#ff9; margin-top:8px;}
+@keyframes fadein {from {opacity:0; transform:translateY(8px);} to {opacity:1; transform:translateY(0);}}
 </style>
 </head>
 <body>
-<h1>🔥 Jeu Coquin — Mix 📸 🎥 💋</h1>
+<h1>🔥 Jeu Coquin — v2.3 (FIXED)</h1>
 
 <div id="setup" class="card">
+  <p style="margin:0 0 12px 0;">Appuie sur <strong>Commencer</strong> — les 40 défis photo/vidéo arriveront d'abord.</p>
   <button onclick="startGame()">🚀 Commencer</button>
+  <small class="note">Les défis photo/vidéo sont montrés en premier (shuffled). Respect et consentement obligatoires.</small>
 </div>
 
 <div id="game" style="display:none;width:100%;">
-  <div id="card" class="card">
+  <div id="card" class="card" aria-live="polite">
     <div id="cardIcon" class="icon"></div>
-    <div id="cardText" style="font-size:20px;line-height:1.5;"></div>
+    <div id="cardText" style="font-size:20px;line-height:1.45;"></div>
   </div>
-  <button onclick="randomCard()">🎲 Carte aléatoire</button>
+  <button id="nextBtn" onclick="nextCard()">🎲 Carte suivante</button>
 
   <div class="card">
     <h3>➕ Ajouter un défi</h3>
@@ -39,16 +43,63 @@ textarea {width:90%;padding:12px;border-radius:12px;border:none;margin:10px auto
   </div>
 </div>
 
-<div class="footer">Consentement et respect avant chaque défi.<br><small>Version v2.3</small></div>
+<div class="footer">Consentement et respect avant chaque défi.<br><small>Version v2.3-fixed</small></div>
 
 <script>
-let cards = [{"text": "(Femme) Jean entrouvert, main prête à descendre.", "icon": "📸"}, {"text": "(Femme) Main sous t-shirt arrêtée juste avant.", "icon": "📸"}, {"text": "(Femme) Tire un peu sur ton sous-vêtement et prends une photo.", "icon": "📸"}, {"text": "(Femme) Serviette qui tient à peine.", "icon": "📸"}, {"text": "(Femme) Chemise entrouverte, bouton de trop défait.", "icon": "📸"}, {"text": "(Femme) Main remontant le long de la cuisse.", "icon": "📸"}, {"text": "(Femme) Photo assise, jambes entrouvertes, main en attente.", "icon": "📸"}, {"text": "(Femme) Allongée, main très bas sur le ventre.", "icon": "📸"}, {"text": "(Femme) Joue avec la bordure de ton sous-vêtement.", "icon": "📸"}, {"text": "(Femme) Comme si tu enlevais un vêtement mais stoppée.", "icon": "📸"}, {"text": "(Homme) Torse nu, main descendant vers le bas.", "icon": "📸"}, {"text": "(Homme) Photo en caleçon entrouvert.", "icon": "📸"}, {"text": "(Homme) Tire sur ta ceinture.", "icon": "📸"}, {"text": "(Homme) Allongé, main très bas sur le ventre.", "icon": "📸"}, {"text": "(Homme) Torse nu devant miroir, regard provocant.", "icon": "📸"}, {"text": "(Homme) Jean entrouvert prêt à descendre.", "icon": "📸"}, {"text": "(Homme) Main posée à l’intérieur de la cuisse.", "icon": "📸"}, {"text": "(Homme) Retire ton t-shirt et capture.", "icon": "📸"}, {"text": "(Homme) En boxer, main prête à descendre.", "icon": "📸"}, {"text": "(Homme) Torse nu, partiellement couvert d’un drap.", "icon": "📸"}, {"text": "(Femme) Vidéo: retire doucement une chaussette ou vêtement.", "icon": "🎥"}, {"text": "(Femme) Vidéo sous un drap qui glisse.", "icon": "🎥"}, {"text": "(Femme) Vidéo: tire lentement sur ton haut ou jupe.", "icon": "🎥"}, {"text": "(Femme) Approche ta bouche de la caméra pour un baiser.", "icon": "🎥"}, {"text": "(Femme) Chuchote un mot excitant en vidéo.", "icon": "🎥"}, {"text": "(Femme) Tes doigts disparaissent sous un tissu (vidéo).", "icon": "🎥"}, {"text": "(Femme) Déboutonne un vêtement lentement (vidéo).", "icon": "🎥"}, {"text": "(Femme) Soulève un peu ton haut puis arrête (vidéo).", "icon": "🎥"}, {"text": "(Femme) Allongée, main qui descend lentement (vidéo).", "icon": "🎥"}, {"text": "(Femme) Joue avec la bordure de ton sous-vêtement (vidéo).", "icon": "🎥"}, {"text": "(Homme) Vidéo: défais lentement ta ceinture.", "icon": "🎥"}, {"text": "(Homme) Passe ta main sur ta cuisse en jean (vidéo).", "icon": "🎥"}, {"text": "(Homme) Montre ton torse nu comme sous la douche (vidéo).", "icon": "🎥"}, {"text": "(Homme) Retire ton t-shirt lentement (vidéo).", "icon": "🎥"}, {"text": "(Homme) Souffle un baiser à la caméra (vidéo).", "icon": "🎥"}, {"text": "(Homme) Ouvre ton pantalon avec lenteur (vidéo).", "icon": "🎥"}, {"text": "(Homme) Enlève un vêtement pièce par pièce (vidéo).", "icon": "🎥"}, {"text": "(Homme) Torse nu, main descendant (vidéo).", "icon": "🎥"}, {"text": "(Homme) En boxer, provocant au miroir (vidéo).", "icon": "🎥"}, {"text": "(Homme) Passe la main sous ton t-shirt (vidéo).", "icon": "🎥"}, {"text": "Embrasse ton/ta partenaire pendant 10 secondes.", "icon": "💋"}, {"text": "Fais un câlin torride pendant 30 secondes.", "icon": "🤗"}, {"text": "Danse de façon sexy pendant 1 minute.", "icon": "💃"}, {"text": "Prépare un petit verre/cocktail pour ton/ta partenaire.", "icon": "🍸"}, {"text": "Avoue un fantasme secret.", "icon": "🔐"}, {"text": "Décris ce que tu aimerais faire à ton/ta partenaire.", "icon": "👅"}, {"text": "Mets une musique sensuelle et bouge dessus.", "icon": "🎶"}, {"text": "Laisse ton/ta partenaire choisir ton prochain défi.", "icon": "🎲"}, {"text": "Masse doucement les épaules de ton/ta partenaire.", "icon": "💆"}, {"text": "Fais un baiser dans le cou de ton/ta partenaire.", "icon": "😘"}, {"text": "Regarde ton/ta partenaire intensément 20 secondes.", "icon": "👀"}, {"text": "Fais semblant de chuchoter quelque chose de très coquin.", "icon": "🗣️"}, {"text": "Offre une caresse lente sur le bras/jambe de ton/ta partenaire.", "icon": "✋"}, {"text": "Chante une chanson de façon sensuelle.", "icon": "🎤"}, {"text": "Fais rire ton/ta partenaire avec un strip-tease drôle.", "icon": "🤣"}, {"text": "Échangez vos vêtements pendant 1 tour.", "icon": "👕"}, {"text": "Choisis une partie du corps de ton/ta partenaire et embrasse-la.", "icon": "❤️"}, {"text": "Souffle doucement à l’oreille de ton/ta partenaire.", "icon": "👂"}, {"text": "Fais un compliment torride à ton/ta partenaire.", "icon": "🔥"}, {"text": "Donne un baiser sur la main comme au cinéma.", "icon": "🤵"}, {"text": "Invente un surnom sexy pour ton/ta partenaire.", "icon": "💌"}, {"text": "Fais un bisou rapide sur plusieurs parties du visage.", "icon": "😘"}, {"text": "Tiens la main de ton/ta partenaire pendant 1 minute.", "icon": "✋"}, {"text": "Décris le souvenir le plus hot que vous avez ensemble.", "icon": "🧠"}, {"text": "Offre ton plus beau sourire coquin.", "icon": "😉"}, {"text": "Échangez un objet personnel pour 1 tour.", "icon": "🎁"}, {"text": "Regarde ton/ta partenaire sans parler pendant 1 minute.", "icon": "⌛"}, {"text": "Donne un ordre coquin à ton/ta partenaire.", "icon": "📢"}, {"text": "Mime ton fantasme préféré.", "icon": "🎭"}, {"text": "Fais une danse lente avec ton/ta partenaire.", "icon": "🕺"}];
-let currentCardIndex = null;
+const data = {"photo_cards": [{"text": "(Femme) Jean entrouvert, main prête à descendre.", "icon": "📸"}, {"text": "(Femme) Main sous t-shirt arrêtée juste avant.", "icon": "📸"}, {"text": "(Femme) Tire un peu sur ton sous-vêtement et prends une photo.", "icon": "📸"}, {"text": "(Femme) Serviette qui tient à peine.", "icon": "📸"}, {"text": "(Femme) Chemise entrouverte, bouton de trop défait.", "icon": "📸"}, {"text": "(Femme) Main remontant le long de la cuisse.", "icon": "📸"}, {"text": "(Femme) Photo assise, jambes entrouvertes, main en attente.", "icon": "📸"}, {"text": "(Femme) Allongée, main très bas sur le ventre.", "icon": "📸"}, {"text": "(Femme) Joue avec la bordure de ton sous-vêtement.", "icon": "📸"}, {"text": "(Femme) Comme si tu enlevais un vêtement mais stoppée.", "icon": "📸"}, {"text": "(Homme) Torse nu, main descendant vers le bas.", "icon": "📸"}, {"text": "(Homme) Photo en caleçon entrouvert.", "icon": "📸"}, {"text": "(Homme) Tire sur ta ceinture.", "icon": "📸"}, {"text": "(Homme) Allongé, main très bas sur le ventre.", "icon": "📸"}, {"text": "(Homme) Torse nu devant miroir, regard provocant.", "icon": "📸"}, {"text": "(Homme) Jean entrouvert prêt à descendre.", "icon": "📸"}, {"text": "(Homme) Main posée à l’intérieur de la cuisse.", "icon": "📸"}, {"text": "(Homme) Retire ton t-shirt et capture.", "icon": "📸"}, {"text": "(Homme) En boxer, main prête à descendre.", "icon": "📸"}, {"text": "(Homme) Torse nu, partiellement couvert par un drap.", "icon": "📸"}], "video_cards": [{"text": "(Femme) Vidéo: retire doucement une chaussette ou vêtement.", "icon": "🎥"}, {"text": "(Femme) Vidéo sous un drap qui glisse.", "icon": "🎥"}, {"text": "(Femme) Vidéo: tire lentement sur ton haut ou jupe.", "icon": "🎥"}, {"text": "(Femme) Approche ta bouche de la caméra pour un baiser.", "icon": "🎥"}, {"text": "(Femme) Chuchote un mot excitant en vidéo.", "icon": "🎥"}, {"text": "(Femme) Tes doigts disparaissent sous un tissu (vidéo).", "icon": "🎥"}, {"text": "(Femme) Déboutonne un vêtement lentement (vidéo).", "icon": "🎥"}, {"text": "(Femme) Soulève un peu ton haut puis arrête (vidéo).", "icon": "🎥"}, {"text": "(Femme) Allongée, main qui descend lentement (vidéo).", "icon": "🎥"}, {"text": "(Femme) Joue avec la bordure de ton sous-vêtement (vidéo).", "icon": "🎥"}, {"text": "(Homme) Vidéo: défais lentement ta ceinture.", "icon": "🎥"}, {"text": "(Homme) Passe ta main sur ta cuisse en jean (vidéo).", "icon": "🎥"}, {"text": "(Homme) Montre ton torse nu comme si tu sortais de la douche.", "icon": "🎥"}, {"text": "(Homme) Retire ton t-shirt lentement (vidéo).", "icon": "🎥"}, {"text": "(Homme) Souffle un baiser vers la caméra en vidéo.", "icon": "🎥"}, {"text": "(Homme) Ouvre ton pantalon avec lenteur (vidéo).", "icon": "🎥"}, {"text": "(Homme) Enlève un vêtement pièce par pièce (vidéo).", "icon": "🎥"}, {"text": "(Homme) Torse nu, main descendant vers le bas en vidéo.", "icon": "🎥"}, {"text": "(Homme) En boxer, provocant devant le miroir en vidéo.", "icon": "🎥"}, {"text": "(Homme) Passe la main sous ton t-shirt en vidéo.", "icon": "🎥"}], "normal_cards": [{"text": "Embrasse ton/ta partenaire pendant 10 secondes.", "icon": "💋"}, {"text": "Fais un câlin torride pendant 30 secondes.", "icon": "🤗"}, {"text": "Danse de façon sexy pendant 1 minute.", "icon": "💃"}, {"text": "Prépare un petit verre/cocktail pour ton/ta partenaire.", "icon": "🍸"}, {"text": "Avoue un fantasme secret.", "icon": "🔐"}, {"text": "Décris ce que tu aimerais faire à ton/ta partenaire.", "icon": "👅"}, {"text": "Mets une musique sensuelle et bouge dessus.", "icon": "🎶"}, {"text": "Laisse ton/ta partenaire choisir ton prochain défi.", "icon": "🎲"}, {"text": "Masse doucement les épaules de ton/ta partenaire.", "icon": "💆"}, {"text": "Fais un baiser dans le cou de ton/ta partenaire.", "icon": "😘"}, {"text": "Regarde ton/ta partenaire intensément 20 secondes.", "icon": "👀"}, {"text": "Fais semblant de chuchoter quelque chose de très coquin.", "icon": "🗣️"}, {"text": "Offre une caresse lente sur le bras/jambe de ton/ta partenaire.", "icon": "✋"}, {"text": "Chante une chanson de façon sensuelle.", "icon": "🎤"}, {"text": "Fais rire ton/ta partenaire avec un strip-tease drôle.", "icon": "🤣"}, {"text": "Échangez vos vêtements pendant 1 tour.", "icon": "👕"}, {"text": "Choisis une partie du corps de ton/ta partenaire et embrasse-la.", "icon": "❤️"}, {"text": "Souffle doucement à l’oreille de ton/ta partenaire.", "icon": "👂"}, {"text": "Fais un compliment torride à ton/ta partenaire.", "icon": "🔥"}, {"text": "Donne un baiser sur la main comme au cinéma.", "icon": "🤵"}, {"text": "Invente un surnom sexy pour ton/ta partenaire.", "icon": "💌"}, {"text": "Fais un bisou rapide sur plusieurs parties du visage.", "icon": "😘"}, {"text": "Tiens la main de ton/ta partenaire pendant 1 minute.", "icon": "✋"}, {"text": "Décris le souvenir le plus hot que vous avez ensemble.", "icon": "🧠"}, {"text": "Offre ton plus beau sourire coquin.", "icon": "😉"}, {"text": "Échangez un objet personnel pour 1 tour.", "icon": "🎁"}, {"text": "Regarde ton/ta partenaire sans parler pendant 1 minute.", "icon": "⌛"}, {"text": "Donne un ordre coquin à ton/ta partenaire.", "icon": "📢"}, {"text": "Mime ton fantasme préféré.", "icon": "🎭"}, {"text": "Fais une danse lente avec ton/ta partenaire.", "icon": "🕺"}]};
 
-function startGame(){ document.getElementById('setup').style.display='none'; document.getElementById('game').style.display='block'; randomCard(); }
-function showCard(i){ currentCardIndex=i; const c=cards[i]; document.getElementById('cardText').textContent=c.text; document.getElementById('cardIcon').textContent=c.icon||'🔥'; }
-function randomCard(){ showCard(Math.floor(Math.random()*cards.length)); }
-function addCard(){ const text=document.getElementById('newCardText').value.trim(); if(text.length<4)return; cards.push({text:text,icon:'🔥'}); document.getElementById('newCardText').value=''; }
+// Shuffle helper
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+let deck = []; // will contain objects {text, icon}
+let currentCard = null;
+
+function buildDeck(){ 
+  const pv = shuffle(data.photo_cards.concat(data.video_cards)); // all photo+video shuffled together
+  const normal = shuffle(data.normal_cards.slice()); // copy then shuffle normal
+  deck = pv.concat(normal); // PV first, then normal
+}
+
+// Show card object
+function showCardObj(c){
+  currentCard = c;
+  const iconEl = document.getElementById('cardIcon');
+  const textEl = document.getElementById('cardText');
+  iconEl.textContent = c.icon || '🔥';
+  textEl.textContent = c.text;
+  // subtle pulse
+  const cardEl = document.getElementById('card');
+  cardEl.style.opacity = 0.98;
+  cardEl.style.transform = 'translateY(0px)';
+}
+
+// Start game
+function startGame(){
+  buildDeck();
+  document.getElementById('setup').style.display='none';
+  document.getElementById('game').style.display='block';
+  nextCard();
+}
+
+// Next card (called by button)
+function nextCard(){
+  if(!deck || deck.length===0){
+    alert('Plus de cartes — réinitialisation.');
+    buildDeck();
+  }
+  const c = deck.shift();
+  if(c) showCardObj(c);
+  // if deck becomes empty, keep button to rebuild
+}
+
+// Add custom card (goes to the end of the deck)
+function addCard(){
+  const txt = document.getElementById('newCardText').value.trim();
+  if(txt.length < 3) return;
+  deck.push({text: txt, icon: '🔥'});
+  document.getElementById('newCardText').value = '';
+  alert('Défi ajouté à la fin du paquet.');
+}
 </script>
 </body>
 </html>
