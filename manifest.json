@@ -1,10 +1,10 @@
 {
-  "name": "Jeu Coquin — Défis sexy",
-  "short_name": "JeuCoquin",
+  "name": "Jeu Coquin — avec pseudos & notif",
+  "short_name": "JeuCoquinNotif",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#0b0b0b",
-  "theme_color": "#ff5a9e",
+  "background_color": "#111",
+  "theme_color": "#f06",
   "icons": [
     {
       "src": "icons/icon-192.png",
