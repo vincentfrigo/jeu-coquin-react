@@ -49,6 +49,7 @@ input,textarea,select{width:92%;padding:10px;border-radius:10px;border:none;marg
     <button id='addBtn'>➕ Ajouter</button>
   </div>
   <p id='message'></p>
+  <div class='footer'><button id='testNotifBtn' style='font-size:12px;width:auto;padding:6px 10px;margin-top:8px;'>🔔 Tester notif</button></div>
 </div>
 <div class='footer'>Rappelle-toi : consentement et respect avant chaque défi.</div>
 <script>
@@ -77,7 +78,13 @@ function bind(id, fn){
   if(!el) return; 
   el.addEventListener('click', fn); 
 }, {passive:false}); }
-bind('startBtn', startGame); bind('seeBtn', pickCard); bind('randomBtn', randomCard); bind('passBtn', passCard); bind('validateBtn', validateCard); bind('addBtn', addCard);
+bind('startBtn', startGame); bind('startBtn', startGame);
+    bind('seeBtn', pickCard);
+    bind('randomBtn', randomCard);
+    bind('passBtn', passCard);
+    bind('validateBtn', validateCard);
+    bind('addBtn', addCard);
+    bind('testNotifBtn', ()=> notify('Ceci est un test de notification 🔔'));
 </script>
 </body>
 </html>
