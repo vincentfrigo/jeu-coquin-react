@@ -4,15 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jeu Coquin Torride 🔥</title>
-  <link rel="manifest" href="manifest.json">
   <style>
     body { font-family: Arial, sans-serif; background: #111; color: #eee; text-align: center; padding: 20px; }
     h1 { color: #f06; }
     .card { background:#222; border-radius:12px; padding:20px; margin:20px auto; max-width:400px; }
-    .card img { max-width:100%; border-radius:12px; margin-bottom:15px; }
     button { background:#f06; color:#fff; border:none; border-radius:8px; padding:10px 18px; margin:5px; cursor:pointer; }
     button:hover { background:#d0046b; }
-    input, textarea { width:90%; padding:8px; margin:6px 0; border-radius:8px; border:none; }
+    textarea { width:90%; padding:8px; margin:6px 0; border-radius:8px; border:none; }
     #addCardForm { background:#222; padding:15px; border-radius:12px; margin-top:20px; }
   </style>
 </head>
@@ -25,21 +23,18 @@
   <button onclick="passCard()">Passe 🚫</button>
 
   <div id="card" class="card" style="display:none;">
-    <img id="cardImage" src="" alt="image" />
+    <p id="cardIcon" style="font-size:2em;"></p>
     <p id="cardText"></p>
   </div>
 
   <div id="addCardForm">
-    <h2>Ajouter ta carte 📸</h2>
+    <h2>Ajouter ton défi 🔥</h2>
     <textarea id="newCardText" rows="2" placeholder="Défi sexy..."></textarea><br>
-    <input type="file" id="newCardImage" accept="image/*" /><br>
     <button onclick="addCard()">Ajouter</button>
   </div>
 
 <script>
-  const defaultImg = "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=80";
-  let cards = [];
-  for(let i=1;i<=25;i++){ cards.push({text:"Carte coquine numéro "+i, img:defaultImg}); }
+  let cards = [{'text': 'Fais un strip-tease lent de 2 minutes.', 'icon': '🔥'}, {'text': 'Embrasse passionnément la personne de ton choix.', 'icon': '💋'}, {'text': 'Laisse ton/ta partenaire t’attacher les mains pendant 5 minutes.', 'icon': '🔒'}, {'text': 'Prépare un cocktail sexy pour ton/ta partenaire.', 'icon': '🍸'}, {'text': 'Chuchote une fantasme coquin à l’oreille de ton/ta partenaire.', 'icon': '👂'}, {'text': 'Lèche le cou de la personne à ta gauche.', 'icon': '👅'}, {'text': 'Fais un massage torride de 5 minutes.', 'icon': '💆'}, {'text': 'Danse sensuellement pour la personne en face de toi.', 'icon': '💃'}, {'text': 'Fais deviner une partie de ton corps avec les yeux bandés.', 'icon': '🕶️'}, {'text': 'Mords doucement la lèvre de ton/ta partenaire.', 'icon': '🦷'}, {'text': 'Écris un mot sexy sur le corps de ton/ta partenaire avec tes doigts.', 'icon': '✍️'}, {'text': 'Donne un baiser dans le cou à la personne de ton choix.', 'icon': '😘'}, {'text': 'Chante une chanson sexy en te déshabillant d’un vêtement.', 'icon': '🎤'}, {'text': 'Fais deviner un mot avec un mime sensuel.', 'icon': '🎭'}, {'text': 'Bois cul sec et embrasse la personne en face de toi.', 'icon': '🥂'}, {'text': 'Utilise uniquement ta bouche pour exciter la main de ton/ta partenaire.', 'icon': '👄'}, {'text': 'Fais une danse collée-serrée avec la personne de ton choix.', 'icon': '🕺'}, {'text': 'Laisse ton/ta partenaire griffer doucement ton dos.', 'icon': '🐾'}, {'text': 'Masse les pieds de la personne à ta gauche.', 'icon': '🦶'}, {'text': 'Succombe à un baiser de 30 secondes minimum.', 'icon': '💏'}, {'text': 'Installe-toi sur les genoux de ton/ta partenaire pendant 2 minutes.', 'icon': '🪑'}, {'text': 'Laisse la personne à ta droite caresser ton torse/ta poitrine.', 'icon': '🤲'}, {'text': 'Lèche doucement un doigt de ton/ta partenaire.', 'icon': '👆'}, {'text': 'Donne une fessée coquine à la personne de ton choix.', 'icon': '🍑'}, {'text': 'Fais semblant de gémir comme si tu étais en plein plaisir.', 'icon': '🔊'}, {'text': 'Décris ton fantasme le plus secret.', 'icon': '💭'}, {'text': 'Montre ton meilleur regard de séducteur/séductrice.', 'icon': '👀'}, {'text': 'Passe tes mains sous les vêtements (par-dessus les sous-vêtements).', 'icon': '🖐️'}, {'text': 'Fais un câlin torride de 20 secondes.', 'icon': '🤗'}, {'text': 'Fais tourner une bouteille et embrasse celui/celle qu’elle désigne.', 'icon': '🍾'}, {'text': 'Recopie un mot sexy sur la peau de ton/ta partenaire avec ta langue.', 'icon': '👅'}, {'text': 'Laisse ton/ta partenaire retirer un vêtement de ton choix.', 'icon': '🧥'}, {'text': 'Attrape ton/ta partenaire par la taille et embrasse-le/la fougueusement.', 'icon': '🤍'}, {'text': 'Décris à voix haute une scène coquine qui t’excite.', 'icon': '🗣️'}, {'text': 'Ferme les yeux et laisse quelqu’un t’embrasser où il/elle veut.', 'icon': '🙈'}, {'text': 'Fais semblant de faire l’amour avec un oreiller devant tout le monde.', 'icon': '🛏️'}, {'text': 'Fais un massage des fesses de ton/ta partenaire.', 'icon': '🍑'}, {'text': 'Laisse ton/ta partenaire choisir une position et mime-la avec lui/elle.', 'icon': '♾️'}, {'text': 'Passe un glaçon lentement sur le corps de ton/ta partenaire.', 'icon': '🧊'}, {'text': 'Chuchote un mot cochon à l’oreille de ton/ta partenaire.', 'icon': '💬'}, {'text': 'Montre ta partie du corps préférée pendant 5 secondes.', 'icon': '✨'}, {'text': 'Fais semblant d’atteindre l’extase bruyamment.', 'icon': '😏'}, {'text': 'Décris ce que tu voudrais faire à ton/ta partenaire maintenant.', 'icon': '🔥'}, {'text': 'Laisse ton/ta partenaire te bander les yeux et te surprendre.', 'icon': '🕶️'}, {'text': 'Laisse ton/ta partenaire embrasser ton ventre.', 'icon': '👄'}, {'text': 'Mets-toi au sol et fais une pose sexy.', 'icon': '🧎'}, {'text': 'Fais une danse torride avec ton/ta partenaire.', 'icon': '💃'}, {'text': 'Décris ton/ta partenaire de la façon la plus excitante possible.', 'icon': '🤤'}, {'text': 'Donne un bisou à la personne que tu regardes en ce moment.', 'icon': '👀'}];
 
   const saved = localStorage.getItem("cards");
   if(saved){ try { cards = cards.concat(JSON.parse(saved)); } catch(e){} }
@@ -49,7 +44,7 @@
   function showCard(i){
     current = i;
     document.getElementById("cardText").textContent = cards[i].text;
-    document.getElementById("cardImage").src = cards[i].img || defaultImg;
+    document.getElementById("cardIcon").textContent = cards[i].icon || "🔥";
     document.getElementById("card").style.display="block";
   }
   function pickCard(){
@@ -65,23 +60,14 @@
   function addCard(){
     const text = document.getElementById("newCardText").value.trim();
     if(text.length<3){ alert("Écris plus de 3 caractères"); return; }
-    const file = document.getElementById("newCardImage").files[0];
-    if(file){
-      const r=new FileReader();
-      r.onload=e=>{ cards.push({text:text, img:e.target.result}); save(); alert("Ajoutée!"); resetForm(); };
-      r.readAsDataURL(file);
-    } else {
-      cards.push({text:text, img:defaultImg}); save(); alert("Ajoutée!"); resetForm();
-    }
+    cards.push({text:text, icon:"🔥"});
+    save();
+    alert("Ajoutée!");
+    resetForm();
     document.getElementById("maxCards").textContent = cards.length;
   }
-  function resetForm(){ document.getElementById("newCardText").value=""; document.getElementById("newCardImage").value=""; }
-  function save(){ localStorage.setItem("cards", JSON.stringify(cards.slice(25))); }
-
-  // Service worker pour PWA
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('sw.js');
-  }
+  function resetForm(){ document.getElementById("newCardText").value=""; }
+  function save(){ localStorage.setItem("cards", JSON.stringify(cards.slice(49))); }
 </script>
 </body>
 </html>
