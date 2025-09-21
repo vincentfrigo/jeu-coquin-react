@@ -3,49 +3,52 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Jeu Coquin — v2.1</title>
+<title>Jeu Coquin — v2.2</title>
 <link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
-body{{font-family:Arial,Helvetica,sans-serif;background:#0b0b0b;color:#f5efef;margin:0;padding:16px;}}
-h1{{color:#ff6aa6;text-align:center;margin-top:12px;}}
-.card{{background:#161616;border-radius:14px;padding:18px;margin:14px auto;max-width:560px;box-shadow:0 6px 18px rgba(0,0,0,0.5);text-align:center;}}
-.icon{{font-size:36px;margin-bottom:8px;text-align:center;}}
-button{{display:block;width:92%;margin:10px auto;padding:12px;border-radius:12px;border:none;background:#ff6aa6;color:white;font-size:16px;}}
-textarea{{width:92%;padding:10px;border-radius:10px;border:none;margin:8px auto;display:block;font-size:15px;}}
-.footer{{font-size:12px;color:#bbb;text-align:center;margin-top:12px;}}
+body {font-family:'Poppins',sans-serif;background:linear-gradient(180deg,#1a0006,#0b0b0b);color:#f5f5f5;margin:0;padding:0;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;}
+h1 {color:#ff6aa6;text-align:center;margin:20px;font-size:28px;}
+.card {background:rgba(20,20,20,0.9);border-radius:24px;padding:24px;margin:20px auto;max-width:600px;box-shadow:0 8px 30px rgba(255,50,100,0.3);text-align:center;animation:fadein 0.5s;}
+.icon {font-size:40px;margin-bottom:12px;}
+button {display:block;width:90%;margin:12px auto;padding:14px;border-radius:20px;border:none;background:#ff6aa6;color:white;font-size:18px;font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,0.4);transition:transform 0.1s;}
+button:active {transform:scale(0.96);}
+textarea {width:90%;padding:12px;border-radius:12px;border:none;margin:10px auto;display:block;font-size:15px;}
+.footer {font-size:12px;color:#aaa;text-align:center;margin:20px;}
+@keyframes fadein {from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);}}
 </style>
 </head>
 <body>
-<h1>Jeu Coquin — Hot 📸 & 🎥</h1>
+<h1>🔥 Jeu Coquin — Hot 📸 & 🎥</h1>
 
 <div id="setup" class="card">
   <button onclick="startGame()">🚀 Commencer</button>
 </div>
 
-<div id="game" style="display:none;">
+<div id="game" style="display:none;width:100%;">
   <div id="card" class="card">
     <div id="cardIcon" class="icon"></div>
-    <div id="cardText" style="font-size:18px;line-height:1.4;"></div>
+    <div id="cardText" style="font-size:20px;line-height:1.5;"></div>
   </div>
-  <button onclick="randomCard()">Carte aléatoire 🎲</button>
+  <button onclick="randomCard()">🎲 Carte aléatoire</button>
 
   <div class="card">
-    <h3>Ajouter un défi</h3>
+    <h3>➕ Ajouter un défi</h3>
     <textarea id="newCardText" rows="3" placeholder="Écris un défi..."></textarea>
-    <button onclick="addCard()">➕ Ajouter</button>
+    <button onclick="addCard()">Ajouter</button>
   </div>
 </div>
 
-<div class="footer">Consentement et respect avant chaque défi.<br><small>Version v2.1</small></div>
+<div class="footer">Consentement et respect avant chaque défi.<br><small>Version v2.2</small></div>
 
 <script>
-let cards = [{"text": "Envoie une photo de ton jean entrouvert, main prête à descendre.", "icon": "📸"}, {"text": "Prends une photo où ta main glisse sous ton t-shirt, mais s’arrête juste avant.", "icon": "📸"}, {"text": "Tire un peu sur le bord de ton sous-vêtement et prends une photo.", "icon": "📸"}, {"text": "Fais une photo avec une serviette qui tient à peine.", "icon": "📸"}, {"text": "Prends une photo de ta chemise entrouverte, un bouton de trop défait.", "icon": "📸"}, {"text": "Envoie une photo où ta main remonte lentement le long de ta cuisse.", "icon": "📸"}, {"text": "Prends une photo où tu es assise, jambes entrouvertes, main en attente.", "icon": "📸"}, {"text": "Envoie une photo de toi allongée, main très bas sur ton ventre.", "icon": "📸"}, {"text": "Capture une photo où tu joues avec la bordure de ton sous-vêtement.", "icon": "📸"}, {"text": "Prends une photo comme si tu allais enlever un vêtement, mais stoppée à temps.", "icon": "📸"}, {"text": "Envoie une photo de ton torse nu, main descendant vers le bas.", "icon": "📸"}, {"text": "Prends une photo en caleçon entrouvert.", "icon": "📸"}, {"text": "Capture une photo où tu tires sur ta ceinture.", "icon": "📸"}, {"text": "Fais une photo allongé, main très bas sur ton ventre.", "icon": "📸"}, {"text": "Prends une photo torse nu devant le miroir avec un regard provocant.", "icon": "📸"}, {"text": "Capture une photo avec ton jean entrouvert.", "icon": "📸"}, {"text": "Envoie une photo où ta main est posée à l’intérieur de ta cuisse.", "icon": "📸"}, {"text": "Prends une photo de toi retirant ton t-shirt.", "icon": "📸"}, {"text": "Fais une photo de toi en boxer, main prête à descendre.", "icon": "📸"}, {"text": "Prends une photo torse nu, couvert partiellement par un drap.", "icon": "📸"}, {"text": "Enregistre une vidéo où tu retires doucement une chaussette ou un vêtement.", "icon": "🎥"}, {"text": "Fais une vidéo sous un drap qui glisse lentement.", "icon": "🎥"}, {"text": "Envoie une vidéo où tu tires lentement sur ton t-shirt ou ta jupe.", "icon": "🎥"}, {"text": "Approche ta bouche de la caméra pour un baiser en vidéo.", "icon": "🎥"}, {"text": "Chuchote un mot ou une phrase excitante en vidéo.", "icon": "🎥"}, {"text": "Montre une vidéo où tes doigts disparaissent sous un tissu.", "icon": "🎥"}, {"text": "Filme-toi en train de déboutonner un vêtement lentement.", "icon": "🎥"}, {"text": "Envoie une vidéo de toi qui soulèves un peu ton haut puis t’arrêtes.", "icon": "🎥"}, {"text": "Prends une vidéo de toi allongée, main qui descend lentement.", "icon": "🎥"}, {"text": "Envoie une vidéo où tu joues avec la bordure de ton sous-vêtement.", "icon": "🎥"}, {"text": "Fais une vidéo où tu défais lentement ta ceinture.", "icon": "🎥"}, {"text": "Enregistre une vidéo où tu passes ta main sur ta cuisse en jean.", "icon": "🎥"}, {"text": "Montre en vidéo ton torse nu comme si tu sortais de la douche.", "icon": "🎥"}, {"text": "Envoie une vidéo où tu retires ton t-shirt lentement.", "icon": "🎥"}, {"text": "Souffle un baiser vers la caméra en vidéo.", "icon": "🎥"}, {"text": "Fais une vidéo où tu ouvres ton pantalon avec lenteur.", "icon": "🎥"}, {"text": "Montre une vidéo où tu enlèves un vêtement pièce par pièce.", "icon": "🎥"}, {"text": "Enregistre une vidéo torse nu, main descendant vers le bas.", "icon": "🎥"}, {"text": "Prends une vidéo de toi en boxer, provocant devant le miroir.", "icon": "🎥"}, {"text": "Filme-toi en train de passer la main sous ton t-shirt.", "icon": "🎥"}];
+let cards = [{"text": "(Femme) Envoie une photo de ton jean entrouvert, main prête à descendre.", "icon": "📸"}, {"text": "(Femme) Prends une photo où ta main glisse sous ton t-shirt, mais s’arrête juste avant.", "icon": "📸"}, {"text": "(Femme) Tirez légèrement sur le bord de ton sous-vêtement et prends une photo.", "icon": "📸"}, {"text": "(Femme) Fais une photo avec une serviette qui tient à peine.", "icon": "📸"}, {"text": "(Femme) Chemise entrouverte avec un bouton de trop défait.", "icon": "📸"}, {"text": "(Femme) Main qui remonte lentement le long de ta cuisse.", "icon": "📸"}, {"text": "(Femme) Photo assise, jambes entrouvertes, main en attente.", "icon": "📸"}, {"text": "(Femme) Photo allongée, main très bas sur le ventre.", "icon": "📸"}, {"text": "(Femme) Capture une photo où tu joues avec la bordure de ton sous-vêtement.", "icon": "📸"}, {"text": "(Femme) Comme si tu allais enlever un vêtement, stoppée à temps.", "icon": "📸"}, {"text": "(Homme) Torse nu, main descendant vers le bas.", "icon": "📸"}, {"text": "(Homme) Photo en caleçon entrouvert.", "icon": "📸"}, {"text": "(Homme) Tire sur ta ceinture et prends une photo.", "icon": "📸"}, {"text": "(Homme) Allongé, main très bas sur ton ventre.", "icon": "📸"}, {"text": "(Homme) Torse nu devant miroir avec regard provocant.", "icon": "📸"}, {"text": "(Homme) Jean entrouvert, prêt à descendre.", "icon": "📸"}, {"text": "(Homme) Main posée à l’intérieur de la cuisse.", "icon": "📸"}, {"text": "(Homme) Retire ton t-shirt et capture la photo.", "icon": "📸"}, {"text": "(Homme) En boxer, main prête à descendre.", "icon": "📸"}, {"text": "(Homme) Torse nu partiellement couvert par un drap.", "icon": "📸"}, {"text": "(Femme) Vidéo où tu retires doucement une chaussette ou un vêtement.", "icon": "🎥"}, {"text": "(Femme) Vidéo sous un drap qui glisse lentement.", "icon": "🎥"}, {"text": "(Femme) Vidéo où tu tires lentement sur ton t-shirt ou ta jupe.", "icon": "🎥"}, {"text": "(Femme) Approche ta bouche de la caméra pour un faux baiser.", "icon": "🎥"}, {"text": "(Femme) Chuchote un mot ou une phrase excitante en vidéo.", "icon": "🎥"}, {"text": "(Femme) Vidéo où tes doigts disparaissent sous un tissu.", "icon": "🎥"}, {"text": "(Femme) Déboutonne un vêtement lentement en vidéo.", "icon": "🎥"}, {"text": "(Femme) Soulève un peu ton haut puis arrête en vidéo.", "icon": "🎥"}, {"text": "(Femme) Vidéo allongée, main qui descend lentement.", "icon": "🎥"}, {"text": "(Femme) Vidéo où tu joues avec la bordure de ton sous-vêtement.", "icon": "🎥"}, {"text": "(Homme) Vidéo où tu défais lentement ta ceinture.", "icon": "🎥"}, {"text": "(Homme) Passe ta main sur ta cuisse en jean en vidéo.", "icon": "🎥"}, {"text": "(Homme) Montre ton torse nu comme si tu sortais de la douche.", "icon": "🎥"}, {"text": "(Homme) Retire ton t-shirt lentement en vidéo.", "icon": "🎥"}, {"text": "(Homme) Souffle un baiser vers la caméra en vidéo.", "icon": "🎥"}, {"text": "(Homme) Ouvre ton pantalon avec lenteur en vidéo.", "icon": "🎥"}, {"text": "(Homme) Enlève un vêtement pièce par pièce en vidéo.", "icon": "🎥"}, {"text": "(Homme) Torse nu, main descendant vers le bas en vidéo.", "icon": "🎥"}, {"text": "(Homme) En boxer, provocant devant le miroir en vidéo.", "icon": "🎥"}, {"text": "(Homme) Passe la main sous ton t-shirt en vidéo.", "icon": "🎥"}];
 let currentCardIndex = null;
 
-function startGame(){{ document.getElementById('setup').style.display='none'; document.getElementById('game').style.display='block'; randomCard(); }}
-function showCard(i){{ currentCardIndex=i; const c=cards[i]; document.getElementById('cardText').textContent=c.text; document.getElementById('cardIcon').textContent=c.icon||'🔥'; }}
-function randomCard(){{ showCard(Math.floor(Math.random()*cards.length)); }}
-function addCard(){{ const text=document.getElementById('newCardText').value.trim(); if(text.length<4)return; cards.push({{text:text,icon:'🔥'}}); document.getElementById('newCardText').value=''; }}
+function startGame(){ document.getElementById('setup').style.display='none'; document.getElementById('game').style.display='block'; randomCard(); }
+function showCard(i){ currentCardIndex=i; const c=cards[i]; document.getElementById('cardText').textContent=c.text; document.getElementById('cardIcon').textContent=c.icon||'🔥'; }
+function randomCard(){ showCard(Math.floor(Math.random()*cards.length)); }
+function addCard(){ const text=document.getElementById('newCardText').value.trim(); if(text.length<4)return; cards.push({text:text,icon:'🔥'}); document.getElementById('newCardText').value=''; }
 </script>
 </body>
 </html>
