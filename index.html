@@ -57,7 +57,13 @@ document.getElementById('maxCards').textContent = cards.length;
 let players = []; let currentPlayerIndex = 0; let currentCardIndex = null;
 function showMessage(msg, color='#9ff'){ const el = document.getElementById('message'); el.textContent = msg; el.style.color = color; setTimeout(()=>el.textContent='',3500);}
 if ('Notification' in window && Notification.permission !== 'granted'){ Notification.requestPermission().catch(()=>{}); }
-function notify(msg){ if('Notification' in window && Notification.permission === 'granted'){ new Notification('Jeu Coquin', { body: msg }); } }
+function notify(msg){ 
+  try { 
+    if('Notification' in window && Notification.permission === 'granted'){ 
+      new Notification('Jeu Coquin', { body: msg }); 
+    } 
+  } catch(e){ console.warn('Notif bloquée:', e); } 
+}); } }
 function startGame(){ const input = document.getElementById('playersInput').value.trim(); if(!input){ showMessage('Ajoute au moins un joueur !','red'); return; } players = input.split(/\n+/).map(s=>s.trim()).filter(Boolean); if(players.length===0){ showMessage('Ajoute au moins un joueur !','red'); return; } document.getElementById('setup').style.display='none'; document.getElementById('game').style.display='block'; document.getElementById('cardNumber').max = cards.length; document.getElementById('cardNumber').placeholder = '1 - ' + cards.length; updateCurrentPlayer(); }
 function updateCurrentPlayer(){ document.getElementById('currentPlayer').textContent = players[currentPlayerIndex]; }
 function showCard(i){ currentCardIndex = i; const c = cards[i]; document.getElementById('cardText').textContent = c.text; document.getElementById('cardIcon').textContent = c.icon || '🔥'; document.getElementById('card').style.display='block'; }
@@ -66,7 +72,11 @@ function randomCard(){ showCard(Math.floor(Math.random()*cards.length)); }
 function passCard(){ document.getElementById('card').style.display='none'; currentCardIndex = null; showMessage('Défi passé.'); }
 function validateCard(){ if(currentCardIndex === null){ showMessage('Aucun défi affiché.','red'); return; } const player = players[currentPlayerIndex]; notify(player + ' a validé son défi !'); showMessage(player + ' a validé son défi.'); currentPlayerIndex = (currentPlayerIndex + 1) % players.length; updateCurrentPlayer(); document.getElementById('card').style.display='none'; currentCardIndex = null; }
 function addCard(){ const text = document.getElementById('newCardText').value.trim(); const level = document.getElementById('newCardLevel').value; if(text.length<4){ showMessage('Écris au moins 4 caractères','red'); return; } cards.push({text:text, icon: level}); document.getElementById('newCardText').value=''; document.getElementById('maxCards').textContent = cards.length; showMessage('Défi ajouté !'); }
-function bind(id, fn){ const el = document.getElementById(id); if(!el) return; el.addEventListener('click', fn); el.addEventListener('touchstart', function(e){ e.preventDefault(); fn(); }, {passive:false}); }
+function bind(id, fn){ 
+  const el = document.getElementById(id); 
+  if(!el) return; 
+  el.addEventListener('click', fn); 
+}, {passive:false}); }
 bind('startBtn', startGame); bind('seeBtn', pickCard); bind('randomBtn', randomCard); bind('passBtn', passCard); bind('validateBtn', validateCard); bind('addBtn', addCard);
 </script>
 </body>
